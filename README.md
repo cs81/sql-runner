@@ -10,5 +10,6 @@
 
 #### 使用说明
 
-1. go run main.go run --help
-2. go run main.go run -H 127.0.0.1 -P 5432 -u postgres -p 123456 -d carInfo -s 'show tables' -S 2 -D pgsql
+1. 帮助：./sql-runner run --help
+2. 运行：./sql-runner run -H 127.0.0.1 -P 5432 -u postgres -p 123456 -d carInfo -s 'show tables' -S 2 -D pgsql
+3. 后台运行：./sql-runner run -H 127.0.0.1 -P 5432 -u postgres -p 123456 -d carInfo -s 'show tables' -S 2 -D pgsql &
