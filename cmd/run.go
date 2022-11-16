@@ -14,6 +14,9 @@ var runCmd = &cobra.Command{
 	Long:  `开始运行sql`,
 	Run: func(cmd *cobra.Command, args []string) {
 		initFunc := api.SqlInfoCache[info.DbType]
+		if initFunc == nil {
+			panic("不支持的DB")
+		}
 		initFunc(info).Run()
 	},
 }
