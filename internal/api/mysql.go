@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 type MysqlInfo struct {
@@ -14,7 +15,8 @@ func (receiver *MysqlInfo) Run() {
 	url := receiver.GetDriver()
 	db, err := sql.Open("mysql", url)
 	if err != nil {
-		panic(err)
+		fmt.Printf("%v\n", err.Error())
+		os.Exit(2)
 	}
 	receiver.DoRun(db)
 }
@@ -26,7 +28,7 @@ func (receiver *MysqlInfo) GetDriver() string {
 
 func init() {
 	SqlInfoCache[MysqlDb] = func(info *SqlInfo) Runner {
-		return &PgsqlInfo{
+		return &MysqlInfo{
 			*info,
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/lib/pq"
+	"os"
 )
 
 type PgsqlInfo struct {
@@ -14,7 +15,8 @@ func (receiver *PgsqlInfo) Run() {
 	url := receiver.GetDriver()
 	db, err := sql.Open("postgres", url)
 	if err != nil {
-		panic(err)
+		fmt.Printf("%v\n", err.Error())
+		os.Exit(2)
 	}
 	receiver.DoRun(db)
 }
