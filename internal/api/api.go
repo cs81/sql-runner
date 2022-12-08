@@ -9,6 +9,15 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
+const (
+	MysqlDb = "mysql"
+	PgsqlDb = "pgsql"
+)
+
+var (
+	SqlInfoCache = map[string]func(info *SqlInfo) Runner{}
+)
+
 type Runner interface {
 	Run()
 	GetDriver() string
@@ -67,12 +76,3 @@ func runSql(db *sql.DB, sql string) {
 	fmt.Printf("%v => %v\n", time.Now(), "运行结果成功")
 	_ = query.Close()
 }
-
-const (
-	MysqlDb = "mysql"
-	PgsqlDb = "pgsql"
-)
-
-var (
-	SqlInfoCache = map[string]func(info *SqlInfo) Runner{}
-)

@@ -2,27 +2,32 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
 	"sql-runner/internal/api"
+
+	"github.com/spf13/cobra"
 )
 
-var info = &api.SqlInfo{}
+var (
 
-// runCmd represents the run command
-var runCmd = &cobra.Command{
-	Use:   "run",
-	Short: "运行",
-	Long:  `开始运行sql`,
-	Run: func(cmd *cobra.Command, args []string) {
-		initFunc := api.SqlInfoCache[info.DbType]
-		if initFunc == nil {
-			fmt.Println("不支持的DB")
-			os.Exit(2)
-		}
-		initFunc(info).Run()
-	},
-}
+	// runCmd represents the run command
+	runCmd = &cobra.Command{
+		Use:   "run",
+		Short: "运行",
+		Long:  `开始运行sql`,
+		Run: func(cmd *cobra.Command, args []string) {
+			initFunc := api.SqlInfoCache[info.DbType]
+			if initFunc == nil {
+				fmt.Println("不支持的DB")
+				os.Exit(2)
+			}
+			initFunc(info).Run()
+		},
+	}
+
+	info = &api.SqlInfo{}
+)
 
 func init() {
 	rootCmd.AddCommand(runCmd)

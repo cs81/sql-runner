@@ -3,8 +3,9 @@ package api
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type MysqlInfo struct {

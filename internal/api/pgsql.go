@@ -3,8 +3,9 @@ package api
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/lib/pq"
 	"os"
+
+	_ "github.com/lib/pq"
 )
 
 type PgsqlInfo struct {
