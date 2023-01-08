@@ -2,6 +2,7 @@ package api
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"os"
 	"time"
@@ -67,12 +68,51 @@ func (receiver *SqlInfo) DoRun(db *sql.DB) {
 }
 
 func runSql(db *sql.DB, sql string) {
-	fmt.Printf("%v => 运行sql：%v\n", time.Now(), sql)
-	query, err := db.Query(sql)
+	fmt.Printf("%v => 运行sql: %v\n", time.Now().Format("2006-01-02 15:04:05"), sql)
+	rows, err := db.Query(sql)
 	if err != nil {
-		fmt.Printf("%v => %v\n", time.Now(), err.Error())
+		fmt.Printf("%v => %v\n", time.Now().Format("2006-01-02 15:04:05"), err.Error())
 		os.Exit(2)
 	}
-	fmt.Printf("%v => %v\n", time.Now(), "运行结果成功")
-	_ = query.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
+	fmt.Printf("%v => %v\n", time.Now().Format("2006-01-02 15:04:05"), "运行成功")
+	fmt.Printf("%v => %v\n", time.Now().Format("2006-01-02 15:04:05"), "结果如下")
+	fmt.Println("------------------------------------------------------------------------------------------------------------")
+	fmt.Println()
+	var values []map[string][]byte
+	rowsToStruct(rows, &values)
+	if len(values) > 0 {
+		for i, value := range values {
+			fmt.Printf("%d: ", i+1)
+			for k, v := range value {
+				fmt.Printf("%s: %v ", k, string(v))
+			}
+			fmt.Println()
+		}
+	}
+	fmt.Println()
+	fmt.Println("------------------------------------------------------------------------------------------------------------")
+}
+
+func rowsToStruct[T any](rows *sql.Rows, container *[]T) {
+	columns, _ := rows.Columns()
+	cLen := len(columns)
+	for rows.Next() {
+		temp := make([]any, cLen)
+		for i := 0; i < cLen; i++ {
+			var column any
+			temp[i] = &column
+		}
+		_ = rows.Scan(temp...)
+		tempMap := make(map[string]any, cLen)
+		for i, value := range temp {
+			tempMap[columns[i]] = *value.(*any)
+		}
+		tempByte, _ := json.Marshal(tempMap)
+		value := new(T)
+		_ = json.Unmarshal(tempByte, value)
+		*container = append(*container, *value)
+	}
 }
