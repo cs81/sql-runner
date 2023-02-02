@@ -16,11 +16,22 @@ const (
 )
 
 var (
+	// SqlInfoCache 各类型数据库策略
 	SqlInfoCache = map[string]func(info *SqlInfo) Runner{}
 )
 
 type Runner interface {
+	//
+	// Run
+	//  @Description: 运行
+	//
 	Run()
+
+	//
+	// GetDriver
+	//  @Description: 获取驱动
+	//  @return string
+	//
 	GetDriver() string
 }
 
@@ -36,6 +47,11 @@ type SqlInfo struct {
 	Cron     string
 }
 
+// DoRun
+//
+//	@Description: 运行
+//	@receiver receiver
+//	@param db
 func (receiver *SqlInfo) DoRun(db *sql.DB) {
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)
@@ -67,6 +83,11 @@ func (receiver *SqlInfo) DoRun(db *sql.DB) {
 	select {}
 }
 
+// runSql
+//
+//	@Description: 运行sql
+//	@param db
+//	@param sql
 func runSql(db *sql.DB, sql string) {
 	fmt.Printf("%v => 运行sql: %v\n", time.Now().Format("2006-01-02 15:04:05"), sql)
 	rows, err := db.Query(sql)
@@ -96,6 +117,11 @@ func runSql(db *sql.DB, sql string) {
 	fmt.Println("------------------------------------------------------------------------------------------------------------")
 }
 
+// rowsToStruct[T any]
+//
+//	@Description: rows转换到结构体
+//	@param rows
+//	@param container
 func rowsToStruct[T any](rows *sql.Rows, container *[]T) {
 	columns, _ := rows.Columns()
 	cLen := len(columns)

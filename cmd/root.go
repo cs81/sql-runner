@@ -1,6 +1,5 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -17,6 +16,9 @@ var rootCmd = &cobra.Command{
 	Long:  `一个简单的sql定时执行脚本，需要设置db连接信息、执行间隔、运行sql`,
 }
 
+// Execute
+//
+//	@Description: 执行
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
